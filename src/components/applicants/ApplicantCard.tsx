@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Phone, Mail, Briefcase, Eye, Bot, UserMinus, Calendar, XCircle, FileText, Play, UserCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { GenerateOfferLetter } from "./GenerateOfferLetter";
 
 interface ApplicantCardProps {
   applicant: Applicant;
@@ -20,6 +21,7 @@ interface ApplicantCardProps {
 
 export function ApplicantCard({ applicant, onViewAIReview }: ApplicantCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showOfferLetter, setShowOfferLetter] = useState(false);
 
   const getStatusBadge = () => {
     switch (applicant.status) {
@@ -95,9 +97,9 @@ export function ApplicantCard({ applicant, onViewAIReview }: ApplicantCardProps)
               <Eye className="h-4 w-4 mr-2" />
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setShowOfferLetter(true)}>
               <FileText className="h-4 w-4 mr-2" />
-              Generate Offer
+              Generate Offer Letter
             </DropdownMenuItem>
             <DropdownMenuItem className="text-destructive">
               <XCircle className="h-4 w-4 mr-2" />
@@ -113,9 +115,9 @@ export function ApplicantCard({ applicant, onViewAIReview }: ApplicantCardProps)
               <Eye className="h-4 w-4 mr-2" />
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setShowOfferLetter(true)}>
               <FileText className="h-4 w-4 mr-2" />
-              View Documents
+              View Offer Letter
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Play className="h-4 w-4 mr-2" />
@@ -196,6 +198,12 @@ export function ApplicantCard({ applicant, onViewAIReview }: ApplicantCardProps)
           </Button>
         </div>
       )}
+
+      <GenerateOfferLetter
+        applicant={applicant}
+        open={showOfferLetter}
+        onOpenChange={setShowOfferLetter}
+      />
     </Card>
   );
 }
