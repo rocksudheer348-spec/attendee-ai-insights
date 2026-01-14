@@ -1,6 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { ChatBot, ChatBotButton } from "@/components/chatbot/ChatBot";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -8,6 +9,8 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
@@ -17,6 +20,10 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
           {children}
         </main>
       </div>
+      
+      {/* Chatbot */}
+      <ChatBotButton onClick={() => setIsChatOpen(true)} />
+      <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 }

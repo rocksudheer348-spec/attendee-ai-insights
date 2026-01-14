@@ -43,6 +43,8 @@ import {
   Video
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { FireInternDialog } from "@/components/users/FireInternDialog";
+import { toast } from "sonner";
 
 interface InternRecord {
   id: string;
@@ -135,7 +137,23 @@ export default function UsersPage() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [fireDialogOpen, setFireDialogOpen] = useState(false);
+  const [selectedIntern, setSelectedIntern] = useState<{
+    id: string;
+    name: string;
+    role: string;
+  } | null>(null);
 
+  const handleFireIntern = (intern: typeof selectedIntern) => {
+    setSelectedIntern(intern);
+    setFireDialogOpen(true);
+  };
+
+  const handleConfirmFire = (reason: string) => {
+    toast.success(`${selectedIntern?.name} has been fired. Reason: ${reason}`);
+    setFireDialogOpen(false);
+    setSelectedIntern(null);
+  };
   const filteredData = internsData.filter((record) => {
     const matchesFilter = filter === "all" || 
       record.status.toLowerCase() === filter.toLowerCase();
@@ -304,7 +322,14 @@ export default function UsersPage() {
                           <CheckCircle className="h-4 w-4 mr-2" />
                           Mark Complete
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
+                        <DropdownMenuItem 
+                          className="text-red-600"
+                          onClick={() => handleFireIntern({
+                            id: record.id,
+                            name: record.name,
+                            role: record.role,
+                          })}
+                        >
                           <UserX className="h-4 w-4 mr-2" />
                           Fire Intern
                         </DropdownMenuItem>
@@ -337,6 +362,14 @@ export default function UsersPage() {
         <Button variant="ghost" size="sm">78</Button>
         <Button variant="ghost" size="sm">Next 10</Button>
       </div>
+
+      {/* Fire Intern Dialog */}
+      <FireInternDialog
+        isOpen={fireDialogOpen}
+        onClose={() => setFireDialogOpen(false)}
+        intern={selectedIntern}
+        onConfirm={handleConfirmFire}
+      />
     </DashboardLayout>
   );
 }
