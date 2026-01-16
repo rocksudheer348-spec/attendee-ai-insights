@@ -1,13 +1,13 @@
 import { Applicant } from "@/pages/Applicants";
 import { ApplicantCard } from "./ApplicantCard";
-import { Users, MessageSquare, Phone, Calendar, Send, UserCheck, Rocket } from "lucide-react";
+import { Users, MessageSquare, Phone, Calendar, Send, UserCheck } from "lucide-react";
 
 interface ApplicantKanbanProps {
   applicants: Applicant[];
   onViewAIReview: (applicant: Applicant) => void;
 }
 
-type ColumnStatus = "applied" | "screened" | "contacted" | "interview" | "offer" | "hired" | "starting";
+type ColumnStatus = "applied" | "screened" | "contacted" | "interview" | "offer" | "hired";
 
 interface Column {
   status: ColumnStatus;
@@ -24,7 +24,6 @@ const columns: Column[] = [
   { status: "interview", title: "Interview", icon: <Calendar className="h-4 w-4" />, bgColor: "bg-kanban-interview", headerBg: "bg-stat-orange" },
   { status: "offer", title: "Offer Sent", icon: <Send className="h-4 w-4" />, bgColor: "bg-kanban-offer", headerBg: "bg-stat-pink" },
   { status: "hired", title: "Hired", icon: <UserCheck className="h-4 w-4" />, bgColor: "bg-kanban-hired", headerBg: "bg-stat-green" },
-  { status: "starting", title: "Starting", icon: <Rocket className="h-4 w-4" />, bgColor: "bg-purple-50", headerBg: "bg-purple-400" },
 ];
 
 export function ApplicantKanban({ applicants, onViewAIReview }: ApplicantKanbanProps) {
@@ -32,7 +31,7 @@ export function ApplicantKanban({ applicants, onViewAIReview }: ApplicantKanbanP
     applicants.filter(a => a.status === status);
 
   return (
-    <div className="grid grid-cols-7 gap-4">
+    <div className="grid grid-cols-6 gap-4">
       {columns.map((column) => (
         <div key={column.status} className={`rounded-xl ${column.bgColor} p-3`}>
           {/* Column Header */}
