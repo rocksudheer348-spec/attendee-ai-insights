@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FireInternDialog } from "@/components/users/FireInternDialog";
+import { UploadedDocumentsDialog } from "@/components/users/UploadedDocumentsDialog";
 import { toast } from "sonner";
 
 interface InternRecord {
@@ -143,6 +144,8 @@ export default function UsersPage() {
     name: string;
     role: string;
   } | null>(null);
+  const [documentsDialogOpen, setDocumentsDialogOpen] = useState(false);
+  const [selectedInternForDocs, setSelectedInternForDocs] = useState<string>("");
 
   const handleFireIntern = (intern: typeof selectedIntern) => {
     setSelectedIntern(intern);
@@ -153,6 +156,11 @@ export default function UsersPage() {
     toast.success(`${selectedIntern?.name} has been fired. Reason: ${reason}`);
     setFireDialogOpen(false);
     setSelectedIntern(null);
+  };
+
+  const handleViewDocuments = (internName: string) => {
+    setSelectedInternForDocs(internName);
+    setDocumentsDialogOpen(true);
   };
   const filteredData = internsData.filter((record) => {
     const matchesFilter = filter === "all" || 
@@ -314,7 +322,7 @@ export default function UsersPage() {
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleViewDocuments(record.name)}>
                           <FileText className="h-4 w-4 mr-2" />
                           View Documents
                         </DropdownMenuItem>
@@ -369,6 +377,14 @@ export default function UsersPage() {
         onClose={() => setFireDialogOpen(false)}
         intern={selectedIntern}
         onConfirm={handleConfirmFire}
+      />
+
+      {/* Uploaded Documents Dialog */}
+      <UploadedDocumentsDialog
+        open={documentsDialogOpen}
+        onOpenChange={setDocumentsDialogOpen}
+        internName={selectedInternForDocs}
+        documents={[]}
       />
     </DashboardLayout>
   );

@@ -3,6 +3,7 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { ApplicantKanban } from "@/components/applicants/ApplicantKanban";
 import { AIScreeningReview } from "@/components/applicants/AIScreeningReview";
+import { OnboardingTemplates } from "@/components/applicants/OnboardingTemplates";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -57,6 +58,7 @@ const mockApplicants: Applicant[] = [
 export default function Applicants() {
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"funnel" | "onboarding">("funnel");
 
   const handleViewAIReview = (applicant: Applicant) => {
     setSelectedApplicant(applicant);
@@ -64,70 +66,88 @@ export default function Applicants() {
   };
 
   return (
-    <DashboardLayout title="Applicant Funnel">
-      {/* Funnel Metrics Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-lg font-semibold text-primary">Funnel Metrics</h2>
-          <p className="text-sm text-muted-foreground">Today's summary</p>
-        </div>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Upload className="h-4 w-4" />
-          Export
-        </Button>
+    <DashboardLayout title="Applicants">
+      {/* Tab Navigation */}
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as "funnel" | "onboarding")}>
+          <TabsList className="bg-secondary">
+            <TabsTrigger value="funnel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              Applicant Funnel
+            </TabsTrigger>
+            <TabsTrigger value="onboarding" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              Onboarding Process
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-6 gap-4 mb-8">
-        <StatCard
-          icon={<FileText className="h-5 w-5" />}
-          value="53"
-          label="Total Applicants"
-          change="+8% from yesterday"
-          changeType="positive"
-          variant="blue"
-        />
-        <StatCard
-          icon={<Users className="h-5 w-5" />}
-          value="26"
-          label="Screened >60"
-          change="0.5% from yesterday"
-          changeType="neutral"
-          variant="cyan"
-        />
-        <StatCard
-          icon={<Percent className="h-5 w-5" />}
-          value="42%"
-          label="Conversion:"
-          change="0.5% from yesterday"
-          changeType="positive"
-          variant="green"
-        />
-        <StatCard
-          icon={<Bot className="h-5 w-5" />}
-          value="67"
-          label="Avg AI Score"
-          change="0.5% from yesterday"
-          changeType="positive"
-          variant="orange"
-        />
-        <StatCard
-          icon={<Send className="h-5 w-5" />}
-          value="24"
-          label="Offers Sent"
-          change="0.5% from yesterday"
-          changeType="positive"
-          variant="pink"
-        />
-        <StatCard
-          icon={<UserCheck className="h-5 w-5" />}
-          value="22"
-          label="Hired"
-          change="0.5% from yesterday"
-          changeType="positive"
-          variant="green"
-        />
-      </div>
+      {activeTab === "onboarding" ? (
+        <OnboardingTemplates />
+      ) : (
+        <>
+          {/* Funnel Metrics Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-semibold text-primary">Funnel Metrics</h2>
+              <p className="text-sm text-muted-foreground">Today's summary</p>
+            </div>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Upload className="h-4 w-4" />
+              Export
+            </Button>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-6 gap-4 mb-8">
+            <StatCard
+              icon={<FileText className="h-5 w-5" />}
+              value="53"
+              label="Total Applicants"
+              change="+8% from yesterday"
+              changeType="positive"
+              variant="blue"
+            />
+            <StatCard
+              icon={<Users className="h-5 w-5" />}
+              value="26"
+              label="Screened >60"
+              change="0.5% from yesterday"
+              changeType="neutral"
+              variant="cyan"
+            />
+            <StatCard
+              icon={<Percent className="h-5 w-5" />}
+              value="42%"
+              label="Conversion:"
+              change="0.5% from yesterday"
+              changeType="positive"
+              variant="green"
+            />
+            <StatCard
+              icon={<Bot className="h-5 w-5" />}
+              value="67"
+              label="Avg AI Score"
+              change="0.5% from yesterday"
+              changeType="positive"
+              variant="orange"
+            />
+            <StatCard
+              icon={<Send className="h-5 w-5" />}
+              value="24"
+              label="Offers Sent"
+              change="0.5% from yesterday"
+              changeType="positive"
+              variant="pink"
+            />
+            <StatCard
+              icon={<UserCheck className="h-5 w-5" />}
+              value="22"
+              label="Hired"
+              change="0.5% from yesterday"
+              changeType="positive"
+              variant="green"
+            />
+          </div>
 
       {/* Applicants Table Section */}
       <div className="text-center mb-6">
@@ -184,8 +204,10 @@ export default function Applicants() {
         </div>
       </div>
 
-      {/* Kanban Board */}
-      <ApplicantKanban applicants={mockApplicants} onViewAIReview={handleViewAIReview} />
+          {/* Kanban Board */}
+          <ApplicantKanban applicants={mockApplicants} onViewAIReview={handleViewAIReview} />
+        </>
+      )}
 
       {/* AI Screening Review Dialog */}
       <AIScreeningReview
